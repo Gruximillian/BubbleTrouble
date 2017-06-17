@@ -2,21 +2,25 @@ window.addEventListener('load', function() {
 
   var bubbleBath = document.querySelector('#bubble-bath');
 
+  bubbleBath.addEventListener('click', function(e) {
+    if ( e.target.classList.contains('bubble') ) {
+      popBubble(e.target);
+    }
+  });
+
   function formBubble() {
     var bubble = document.createElement('div');
     bubble.classList.add('bubble');
     bubbleBath.appendChild(bubble);
 
-    bubble.addEventListener('transitionend', function() {
-      popBubble(this);
-    });
-
-    bubble.addEventListener('click', function() {
-      popBubble(this);
-    });
+    bubble.addEventListener('transitionend', removeBubble);
 
     styleBubble(bubble);
 
+  }
+
+  function removeBubble() {
+    popBubble(this);
   }
 
   function styleBubble(bubble) {
@@ -34,6 +38,7 @@ window.addEventListener('load', function() {
   }
 
   function popBubble(bubble) {
+    bubble.removeEventListener('transitionend', removeBubble);
     bubble.parentElement.removeChild(bubble);
   }
 
