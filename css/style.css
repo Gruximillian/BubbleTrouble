@@ -36,6 +36,6 @@ body * {
   cursor: pointer;
   transition-property: all;
   transition-delay: 0s;
-  transition-timing-function: ease-in; /* try expo ease in */
+  transition-timing-function: cubic-bezier(0.600, 0.040, 0.980, 0.335); /* easeInCirc */
 }
 
