@@ -1,7 +1,9 @@
 h1 {
+  display: inline-block;
   font-size: 30px;
   color: #080;
   text-shadow: 2px 2px 2px #000;
+  margin-right: 10px;
 }
 
 body {
@@ -31,6 +33,7 @@ body * {
   position: absolute;
   bottom: 0;
   opacity: 1;
+  text-align: center;
   transform: scale(1) translate3d(0, 110%, 0);
   box-shadow: 0px 0px 1px 1px #333;
   cursor: pointer;
@@ -39,3 +42,6 @@ body * {
   transition-timing-function: cubic-bezier(0.600, 0.040, 0.980, 0.335); /* easeInCirc */
 }
 
+#transcript {
+  color: #fff;
+}

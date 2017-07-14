@@ -1,6 +1,7 @@
 window.addEventListener('load', function() {
 
   var bubbleBath = document.querySelector('#bubble-bath');
+  var words = ['day', 'night', 'elephant', 'car', 'earth', 'tranquility', 'ozone', 'speed', 'computer', 'not me', 'desk', 'street', 'office', 'tetrahedron', 'dodecahedron', 'dinosaur', 'jackass'];
 
 
   // On click on the bubble, the bubble will be removed
@@ -19,6 +20,9 @@ window.addEventListener('load', function() {
   // Create a bubble element and add styles and events
   function formBubble() {
     var bubble = document.createElement('div');
+    textContent = words[Math.floor(Math.random() * words.length)];
+    bubble.textContent = textContent;
+    bubble.setAttribute('data-word', textContent);
     bubble.classList.add('bubble');
     bubbleBath.appendChild(bubble);
     bubble.addEventListener('transitionend', popBubble);
@@ -48,9 +52,10 @@ window.addEventListener('load', function() {
         left = Math.random() * 100;
     bubble.style.width = size + 'px';
     bubble.style.height = size + 'px';
+    bubble.style.lineHeight = size + 'px';
     bubble.style.backgroundColor = 'rgb(' + colorIntensity() + ', ' + colorIntensity() + ', ' + colorIntensity() + ')';
     bubble.style.left = 'calc(' + left + '% - ' + size / 2 + 'px)';
-    bubble.style.transitionDuration = 500 / size + 's';
+    bubble.style.transitionDuration = 1500 / size + 's';
     var bubbleUp = window.setTimeout(function() {
       bubble.style.bottom = '130vh';
       bubble.style.transform = 'scale(1.6)';
@@ -60,7 +65,7 @@ window.addEventListener('load', function() {
 
   // On a random time delay create a new bubble
   function bubbleTrouble() {
-    var delay = (100 + Math.random() * 1000).toFixed(0); // minimum delay is 100ms
+    var delay = (3000 + Math.random() * 1000).toFixed(0); // minimum delay is 3000ms
 
     var startBubbling = window.setTimeout(function () {
       formBubble();
@@ -71,5 +76,42 @@ window.addEventListener('load', function() {
   }
 
   bubbleTrouble();
+
+  /**********************/
+  /* SPEECH RECOGNITION */
+  /**********************/
+
+  // WORKS ONLY IN CHROME :(
+
+  window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  const recognition = new SpeechRecognition();
+  recognition.interimResults = true;
+
+  recognition.addEventListener('result', e => {
+    const transcript = Array.from(e.results).map(result => result[0])
+                                            .map(result => result.transcript)
+                                            .join('').toLowerCase();
+    const whatYouSaid = document.querySelector('#transcript');
+
+    if ( e.results[0].isFinal ) {
+      whatYouSaid.textContent = transcript;
+    }
+
+    if ( e.results[0].isFinal && words.indexOf(transcript) !== -1 ) {
+      const bubble = document.querySelector(`[data-word="${transcript}"`);
+      console.log(transcript);
+
+      if ( transcript === 'not me' && bubble && bubble.dataset.word === 'not me' ) {
+        document.write('<h1 style="color: red;">You blew it!</h1><p>Reload the page to start again</p>');
+      } else if ( bubble ) {
+        bubble.style.transform = '';
+        removeBubble(bubble);
+      }
+    }
+  });
+
+  recognition.addEventListener('end', recognition.start);
+  recognition.start();
 
 });
